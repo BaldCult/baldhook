@@ -35,7 +35,7 @@ QWORD GetExportByName(QWORD base, const char* export_name);
 
 
 #define FILENAME L"[bootx64.efi]"
-#define SERVICE_NAME L"EC"
+#define SERVICE_NAME L"baldhook.win"
 
 #endif /* GLOBALS_H */
 
