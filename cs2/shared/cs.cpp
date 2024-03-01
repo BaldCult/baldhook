@@ -25,6 +25,7 @@ namespace cs
 		static QWORD view_angles;
 		static QWORD view_matrix;
 		static DWORD button_state;
+		static QWORD previous_xy;
 	}
 
 	namespace convars
@@ -80,7 +81,7 @@ inline const char *get_sdl3_name() { return vm::get_target_os() == VmOs::Windows
 inline const char *get_tier0_name() { return vm::get_target_os() == VmOs::Windows ? "tier0.dll" : "libtier0.so"; }
 inline const char *get_inputsystem_name() { return vm::get_target_os() == VmOs::Windows ? "inputsystem.dll" : "libinputsystem.so"; }
 inline int get_entity_off() { return vm::get_target_os() == VmOs::Windows ? 0x58 : 0x50; }
-inline int get_button_off() { return vm::get_target_os() == VmOs::Windows ? 0x0E : 0x11; }
+inline int get_button_off() { return vm::get_target_os() == VmOs::Windows ? 0x13 : 0x14; }
 inline int get_viewangles_off() { return vm::get_target_os() == VmOs::Windows ? 0x6140 : 0x4528; }
 
 #ifdef DEBUG
@@ -121,7 +122,8 @@ static BOOL cs::initialize(void)
 	JZ(client_dll = vm::get_module(game_handle, get_client_name()), E1);
 	JZ(sdl = vm::get_module(game_handle, get_sdl3_name()), E1);
 	JZ(inputsystem = vm::get_module(game_handle, get_inputsystem_name()), E1);
-
+	JZ(direct::previous_xy = vm::scan_pattern_direct(game_handle, inputsystem, "\xF3\x0F\x10\x0D", "xxxx", 4), E1);
+	direct::previous_xy = vm::get_relative_address(game_handle, direct::previous_xy, 4, 8);
 	interfaces::resource = get_interface(vm::get_module(game_handle, get_engine_name()), "GameResourceServiceClientV0");
 	if (interfaces::resource == 0)
 	{
@@ -154,11 +156,12 @@ static BOOL cs::initialize(void)
 
 	JZ(interfaces::entity   = vm::read_i64(game_handle, interfaces::resource + get_entity_off()), E1);
 	interfaces::player      = interfaces::entity + 0x10;
-
 	JZ(interfaces::cvar     = get_interface(vm::get_module(game_handle, get_tier0_name()), "VEngineCvar0"), E1);
 	JZ(interfaces::input    = get_interface(inputsystem, "InputSystemVersion0"), E1);
-	direct::button_state    = vm::read_i32(game_handle, get_interface_function(interfaces::input, 18) + get_button_off() + 5);
-
+	direct::button_state    = vm::read_i32(game_handle,
+		vm::get_target_os() == VmOs::Windows 
+		? get_interface_function(interfaces::input, 18) + get_button_off()	
+		: get_interface_function(interfaces::input, 19) + get_button_off());
 
 	if (vm::get_target_os() == VmOs::Linux)
 	{
@@ -347,8 +350,8 @@ static BOOL cs::initialize(void)
 			}
 			else if (!netvars::m_vOldOrigin && !strcmpi_imp(netvar_name, "m_vOldOrigin"))
 			{
-				LOG("%s, %x\n", netvar_name, *(int*)(entry + 0x10));
-				netvars::m_vOldOrigin = *(int*)(entry + 0x10);
+				LOG("%s, %x\n", netvar_name, *(int*)(entry + 0x08));
+				netvars::m_vOldOrigin = *(int*)(entry + 0x08);
 			}
 			else if (!netvars::m_pClippingWeapon && !strcmpi_imp(netvar_name, "m_pClippingWeapon"))
 			{
@@ -357,8 +360,8 @@ static BOOL cs::initialize(void)
 			}
 			else if (!netvars::v_angle && !strcmpi_imp(netvar_name, "v_angle"))
 			{
-				LOG("%s, %x\n", netvar_name, *(int*)(entry + 0x10));
-				netvars::v_angle = *(int*)(entry + 0x10);
+				LOG("%s, %x\n", netvar_name, *(int*)(entry + 0x08));
+				netvars::v_angle = *(int*)(entry + 0x08);
 			}
 		}
 		vm::free_module(dump_client);
@@ -750,6 +753,19 @@ BOOL cs::input::is_button_down(DWORD button)
 {
 	DWORD v = vm::read_i32(game_handle, (QWORD)(interfaces::input + (((QWORD(button) >> 5) * 4) + direct::button_state)));
 	return (v >> (button & 31)) & 1;
+}
+
+void cs::input::move(int x, int y)
+{
+	typedef struct 
+	{
+		float y, x;
+	} DATA; 
+
+	DATA data{};
+	data.x = (float)y;
+	data.y = (float)x;
+	vm::write(game_handle, direct::previous_xy - 4, &data, sizeof(data));
 }
 
 DWORD cs::player::get_health(QWORD player)
