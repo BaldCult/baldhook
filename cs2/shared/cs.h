@@ -42,6 +42,9 @@
 
 namespace cs
 {
+	extern vm_handle game_handle ;
+
+
 	enum class WEAPON_CLASS {
 		Invalid = 0,
 		Knife = 1,
@@ -83,6 +86,8 @@ namespace cs
 		QWORD get_client_entity(int index);
 		BOOL  is_player(QWORD controller);
 		QWORD get_player(QWORD controller);
+		BOOL  has_defuser(QWORD player);
+		QWORD get_name_address(QWORD player);
 	}
 
 	int get_crosshairalpha(void);
@@ -119,7 +124,10 @@ namespace cs
 		vec2  get_viewangle(QWORD player);
 		WEAPON_CLASS get_weapon_class(QWORD player);
 		QWORD get_node(QWORD player);
+		QWORD get_weapon_address(QWORD player);
+		BOOL  is_defusing(QWORD player);
 		BOOL  is_valid(QWORD player, QWORD node);
+
 	}
 
 	namespace node
