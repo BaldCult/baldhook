@@ -54,7 +54,7 @@ int main(void)
 		return 0;
 	}
 
-	SDL_Window *window = SDL_CreateWindow("EC", 640, 480, SDL_WINDOW_TRANSPARENT | SDL_WINDOW_BORDERLESS);
+	SDL_Window *window = SDL_CreateWindow("baldhook.win", 640, 480, SDL_WINDOW_TRANSPARENT | SDL_WINDOW_BORDERLESS);
 	if (window == NULL)
 	{
 		return 0;
