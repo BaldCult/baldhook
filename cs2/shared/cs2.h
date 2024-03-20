@@ -16,7 +16,7 @@
 #ifndef _KERNEL_MODE
 #include <stdio.h>
 #ifdef DEBUG
-#define LOG(...) printf("[baldhook.win] " __VA_ARGS__)
+#define LOG(...) printf("[EC] " __VA_ARGS__)
 #else
 #define LOG(...) // __VA_ARGS__
 #endif
@@ -24,7 +24,7 @@
 #else
 
 #ifdef DEBUG
-#define LOG(...) DbgPrintEx(DPFLTR_IHVDRIVER_ID, DPFLTR_ERROR_LEVEL, "[baldhook.win] " __VA_ARGS__)
+#define LOG(...) DbgPrintEx(DPFLTR_IHVDRIVER_ID, DPFLTR_ERROR_LEVEL, "[EC] " __VA_ARGS__)
 #else
 #define LOG(...) // __VA_ARGS__
 #endif
