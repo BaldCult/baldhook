@@ -102,108 +102,101 @@ inline void cs2::features::update_settings(void)
 	config::visuals_enabled = 1;
 #endif
 
-
 	switch (weapon_class)
 	{
-	case cs2::WEAPON_CLASS::Knife:
-	case cs2::WEAPON_CLASS::Grenade:
+	case cs::WEAPON_CLASS::Knife:
+	case cs::WEAPON_CLASS::Grenade:
 		config::aimbot_enabled = 0;
 		break;
-	case cs2::WEAPON_CLASS::Pistol:
-		config::aimbot_multibone = 0;
+	case cs::WEAPON_CLASS::Pistol:
+		config::aimbot_multibone = 1;
 		break;
+	case cs::WEAPON_CLASS::Sniper:
+		config::aimbot_multibone = 1;
+		break;
+	case cs::WEAPON_CLASS::Rifle:
+		config::aimbot_multibone = 1;
 	}
-
 
 	switch (crosshair_alpha)
 	{
-	//
-	// mouse5 aimkey, mouse4 triggerkey
-	//
-	case 244:
-		config::aimbot_button     = 321;
-		config::triggerbot_button = 320;
-		config::aimbot_fov        = 2.0f;
-		config::aimbot_smooth     = 5.0f;
-		config::visuals_enabled   = 0;
-		break;
-	case 245:
-		config::aimbot_button     = 321;
-		config::triggerbot_button = 320;
-		config::aimbot_fov        = 2.5f;
-		config::aimbot_smooth     = 4.5f;
-		break;
-	case 246:
-		config::aimbot_button     = 321;
-		config::triggerbot_button = 320;
-		config::aimbot_fov        = 3.0f;
-		config::aimbot_smooth     = 4.0f;
-		break;
-	case 247:
-		config::aimbot_button     = 321;
-		config::triggerbot_button = 320;
-		config::aimbot_fov        = 3.5f;
-		config::aimbot_smooth     = 3.5f;
-		break;
-	case 248:
-		config::aimbot_button     = 321;
-		config::triggerbot_button = 320;
-		config::aimbot_fov        = 4.0f;
-		config::aimbot_smooth     = 3.0f;
-		break;
-	case 249:
-		config::aimbot_button     = 321;
-		config::triggerbot_button = 320;
-		config::aimbot_fov        = 4.5f;
-		config::aimbot_smooth     = 2.5f;
-		break;
-	//
-	// mouse1 aimkey, mouse5 triggerkey
-	//
-	case 250:
-		config::aimbot_button     = 317;
-		config::triggerbot_button = 321;
-		config::aimbot_fov        = 2.0f;
-		config::aimbot_smooth     = 5.0f;
-		config::visuals_enabled   = 0;
-		break;
-	case 251:
-		config::aimbot_button     = 317;
-		config::triggerbot_button = 321;
-		config::aimbot_fov        = 2.5f;
-		config::aimbot_smooth     = 4.5f;
-		break;
-	case 252:
-		config::aimbot_button     = 317;
-		config::triggerbot_button = 321;
-		config::aimbot_fov        = 3.0f;
-		config::aimbot_smooth     = 4.0f;
-		break;
-	case 253:
-		config::aimbot_button     = 317;
-		config::triggerbot_button = 321;
-		config::aimbot_fov        = 3.5f;
-		config::aimbot_smooth     = 3.5f;
-		break;
-	case 254:
-		config::aimbot_button     = 317;
-		config::triggerbot_button = 321;
-		config::aimbot_fov        = 4.0f;
-		config::aimbot_smooth     = 3.0f;
-		break;
-	case 255:
-		config::aimbot_button     = 317;
-		config::triggerbot_button = 321;
-		config::aimbot_fov        = 4.5f;
-		config::aimbot_smooth     = 2.5f;
-		break;
-	default:
-		config::aimbot_button     = 317;
-		config::triggerbot_button = 321;
-		config::aimbot_fov        = 2.0f;
-		config::aimbot_smooth     = 5.0f;
-		config::visuals_enabled   = 0;
-		break;
+case 246:
+	config::visuals_enabled = 0;
+	config::aimbot_button = 317;
+	config::triggerbot_button = 321;
+	config::aimbot_fov = 2.5f;
+	config::aimbot_smooth = 4.5f;
+	break;
+case 247:
+	config::visuals_enabled = 0;
+	config::aimbot_button = 317;
+	config::triggerbot_button = 321;
+	config::aimbot_fov = 3.0f;
+	config::aimbot_smooth = 24.0f;
+	break;
+case 248:
+	config::visuals_enabled = 0;
+	config::aimbot_button = 317;
+	config::triggerbot_button = 321;
+	config::aimbot_fov = 3.0f;
+	config::aimbot_smooth = 12.0f;
+	break;
+case 249:
+	config::visuals_enabled = 0;
+	config::aimbot_button = 317;
+	config::triggerbot_button = 321;
+	config::aimbot_fov = 4.5f;
+	config::aimbot_smooth = 2.5f;
+	break;
+case 250:
+	config::visuals_enabled = 0;
+	config::aimbot_button = 317;
+	config::triggerbot_button = 321;
+	config::aimbot_fov = 0.0f;
+	config::aimbot_smooth = 0.0f;
+	break;
+case 251:
+	config::visuals_enabled = 1;
+	config::aimbot_button = 317;
+	config::triggerbot_button = 321;
+	config::aimbot_fov = 2.5f;
+	config::aimbot_smooth = 4.5f;
+	break;
+case 252:
+	config::visuals_enabled = 1;
+	config::aimbot_button = 317;
+	config::triggerbot_button = 321;
+	config::aimbot_fov = 3.0f;
+	config::aimbot_smooth = 24.0f;
+	break;
+case 253:
+	config::visuals_enabled = 1;
+	config::aimbot_button = 317;
+	config::triggerbot_button = 321;
+	config::aimbot_fov = 3.0f;
+	config::aimbot_smooth = 12.0f;
+	break;
+case 254:
+	config::visuals_enabled = 1;
+	config::aimbot_button = 317;
+	config::triggerbot_button = 321;
+	config::aimbot_fov = 4.5f;
+	config::aimbot_smooth = 2.5f;
+	break;
+case 255:
+	config::visuals_enabled = 1;
+	config::aimbot_button = 317;
+	config::triggerbot_button = 321;
+	config::aimbot_fov = 30.0f;
+	config::aimbot_smooth = 0.0f;
+	break;
+default:
+	config::visuals_enabled = 1;
+	config::aimbot_button = 317;
+	config::triggerbot_button = 321;
+	config::aimbot_fov = 2.0f;
+	config::aimbot_smooth = 5.0f;
+	break;
 	}
 }
 
@@ -347,7 +340,17 @@ void cs2::features::run(void)
 	//
 	if (b_triggerbot_button)
 	{
-		config::aimbot_multibone = 0;
+		switch (weapon_class)
+		{
+		case cs::WEAPON_CLASS::Pistol:
+			config::aimbot_multibone = 0;
+			break;
+		case cs::WEAPON_CLASS::Sniper:
+			config::aimbot_multibone = 1;
+			break;
+		case cs::WEAPON_CLASS::Rifle:
+			config::aimbot_multibone = 0;
+		}
 	}
 
 
