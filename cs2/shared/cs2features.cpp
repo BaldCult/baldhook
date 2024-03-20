@@ -104,17 +104,17 @@ inline void cs2::features::update_settings(void)
 
 	switch (weapon_class)
 	{
-	case cs::WEAPON_CLASS::Knife:
-	case cs::WEAPON_CLASS::Grenade:
+	case cs2::WEAPON_CLASS::Knife:
+	case cs2::WEAPON_CLASS::Grenade:
 		config::aimbot_enabled = 0;
 		break;
-	case cs::WEAPON_CLASS::Pistol:
+	case cs2::WEAPON_CLASS::Pistol:
 		config::aimbot_multibone = 1;
 		break;
-	case cs::WEAPON_CLASS::Sniper:
+	case cs2::WEAPON_CLASS::Sniper:
 		config::aimbot_multibone = 1;
 		break;
-	case cs::WEAPON_CLASS::Rifle:
+	case cs2::WEAPON_CLASS::Rifle:
 		config::aimbot_multibone = 1;
 	}
 
@@ -342,13 +342,13 @@ void cs2::features::run(void)
 	{
 		switch (weapon_class)
 		{
-		case cs::WEAPON_CLASS::Pistol:
+		case cs2::WEAPON_CLASS::Pistol:
 			config::aimbot_multibone = 0;
 			break;
-		case cs::WEAPON_CLASS::Sniper:
+		case cs2::WEAPON_CLASS::Sniper:
 			config::aimbot_multibone = 1;
 			break;
-		case cs::WEAPON_CLASS::Rifle:
+		case cs2::WEAPON_CLASS::Rifle:
 			config::aimbot_multibone = 0;
 		}
 	}
