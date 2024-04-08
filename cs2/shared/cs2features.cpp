@@ -231,7 +231,7 @@ static void cs2::features::has_target_event(QWORD local_player, QWORD target_pla
 		}
 	}
 
-	if (b_triggerbot_button && config::aimbot_enabled && mouse_down_ms == 0 && event_state == 0)
+	if (b_triggerbot_button && config::aimbot_enabled && mouse_down_ms == 0 /* && event_state == 0 */ )
 	{
 		float accurate_shots_fl = -0.08f;
 		if (weapon_class == cs2::WEAPON_CLASS::Pistol)
@@ -257,15 +257,19 @@ static void cs2::features::has_target_event(QWORD local_player, QWORD target_pla
 			vec3 dir = math::vec_atd(vec3{view_angle.x, view_angle.y, 0});
 			vec3 eye = cs2::player::get_eye_position(local_player);
 
+			QWORD node = cs2::player::get_node(aimbot_target);
+			vec3 pos{};
+			cs2::node::get_bone_position(node, aimbot_bone, &pos);
+
 			matrix3x4_t matrix{};
-			matrix[0][3] = bone.x;
-			matrix[1][3] = bone.y;
-			matrix[2][3] = bone.z;
+			matrix[0][3] = (weapon_class == WEAPON_CLASS::Sniper) ? pos.x : bone.x;
+			matrix[1][3] = (weapon_class == WEAPON_CLASS::Sniper) ? pos.y : bone.y;
+			matrix[2][3] = (weapon_class == WEAPON_CLASS::Sniper) ? pos.z : bone.z;
 
 			if (math::vec_min_max(eye, dir,
 				math::vec_transform(coll.min, matrix),
 				math::vec_transform(coll.max, matrix),
-				coll.radius))
+				(weapon_class == WEAPON_CLASS::Sniper && aimbot_bone != 6) ? coll.radius * 2.5f : coll.radius))
 			{
 				DWORD current_ms = cs2::engine::get_current_ms();
 				if (current_ms > mouse_up_ms)
@@ -376,68 +380,20 @@ void cs2::features::run(void)
 	event_state = 0;
 
 	QWORD best_target = 0;
-	if (config::visuals_enabled == 2)
-	{
-		get_best_target(ffa, local_player_controller, local_player, num_shots, aim_punch, &best_target);
-	}
-	else
-	{
-		//
-		// optimize: find target only when button not pressed
-		//
-		if (!b_aimbot_button)
-		{
-			get_best_target(ffa, local_player_controller, local_player, num_shots, aim_punch, &best_target);
-		}
-	}
-
-	//
-	// no previous target found, lets update target
-	//
-	if (aimbot_target == 0)
-	{
-		aimbot_bone   = 0;
-		aimbot_target = best_target;
-	}
-	else
-	{
-		if (!cs2::player::is_valid(aimbot_target, cs2::player::get_node(aimbot_target)))
-		{
-			aimbot_target = best_target;
-
-			if (aimbot_target == 0)
-			{
-				aimbot_bone = 0;
-				get_best_target(ffa, local_player_controller, local_player, num_shots, aim_punch, &aimbot_target);
-			}
-		}
-	}
-
+	get_best_target(ffa, local_player_controller, local_player, num_shots, aim_punch, &best_target);
+	get_best_target(ffa, local_player_controller, local_player, num_shots, aim_punch, &aimbot_target);
+	QWORD node = cs2::player::get_node(aimbot_target);
 
 	aimbot_active = 0;
 
 
-	if (!config::aimbot_enabled)
-	{
-		return;
-	}
-
-
-	//
-	// no valid target found
-	//
-	if (aimbot_target == 0)
-	{
-		return;
-	}
-
-	if (!b_aimbot_button)
-	{
-		return;
-	}
-
-	QWORD node = cs2::player::get_node(aimbot_target);
-	if (node == 0)
+	if
+	(
+		!config::aimbot_enabled ||
+		!b_aimbot_button ||
+		aimbot_target == 0 ||
+		node == 0
+		)
 	{
 		return;
 	}
